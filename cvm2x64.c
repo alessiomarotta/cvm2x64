@@ -12,6 +12,7 @@
 #endif
 
 #define CODE_SIZE 0x1000
+#define N_REGS 32
 
 #define HALT 0
 #define DISPLAY 1
@@ -49,7 +50,7 @@ int nextInt(FILE *fp) {
 	char c = getc(fp);
 	
 	while (!feof(fp)) {
-		if (c >= '0' && c <= '9') {
+		if (c >= '0' && c <= '9' || c == '-') {
 			if (!is_comment)
 				s[i++] = c;
 		}
@@ -226,7 +227,7 @@ int main(int argc, char *argv[]) {
 	int *cvm_code = parse_cvm(argv[1], &line_count);
 	int pc = 0;
 
-	void *regs = mmap(0, CODE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	int32_t *regs = calloc(N_REGS, sizeof(int32_t));
 	void *code = mmap(0, CODE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 	uint8_t *code_buffer = calloc(CODE_SIZE, sizeof(uint8_t));
 	uint8_t *code_ptr = code_buffer;
@@ -481,11 +482,11 @@ int main(int argc, char *argv[]) {
 	function exec = code;
 	exec();
 
+	munmap(code, CODE_SIZE);
 	free(cvm_code);
 	free(code_buffer);
 	free(code_offsets);
-	munmap(regs, CODE_SIZE);
-	munmap(code, CODE_SIZE);
+	free(regs);
 
 	return 0;
 }
