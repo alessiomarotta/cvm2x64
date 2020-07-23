@@ -173,15 +173,15 @@ void **get_code_offsets(void *code, int *cvm_code, int line_count) {
 				pc += 2;
 				break;
 			case JZ:
-				code += 10;
+				code += 9;
 				pc += 2;
 				break;
 			case JPOS:
-				code += 10;
+				code += 9;
 				pc += 2;
 				break;
 			case JNEG:
-				code += 10;
+				code += 9;
 				pc += 2;
 				break;
 			case ADD:
@@ -343,26 +343,26 @@ int main(int argc, char *argv[]) {
 				break;
 			case JZ:
 				// pop rax
-				// cmp eax, 0
+				// test eax, eax
 				// je code_offsets+p1
-				add_code(&code_ptr, "\x58\x83\xf8\x00\x0f\x84", 6);
-				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 10);
+				add_code(&code_ptr, "\x58\x85\xc0\x0f\x84", 5);
+				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 9);
 				pc += 2;
 				break;
 			case JPOS:
 				// pop rax
-				// cmp eax, 0
+				// test eax, eax
 				// jg code_offsets+p1
-				add_code(&code_ptr, "\x58\x83\xf8\x00\x0f\x8f", 6);
-				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 10);
+				add_code(&code_ptr, "\x58\\x85\xc0\x0f\x8f", 5);
+				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 9);
 				pc += 2;
 				break;
 			case JNEG:
 				// pop rax
-				// cmp eax, 0
+				// test eax, eax
 				// jl code_offsets+p1
-				add_code(&code_ptr, "\x58\x83\xf8\x00\x0f\x8c", 6);
-				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 10);
+				add_code(&code_ptr, "\x58\x85\xc0\x0f\x8c", 5);
+				add_immediate(&code_ptr, *(code_offsets+p1) - *(code_offsets+pc) - 9);
 				pc += 2;
 				break;
 			case ADD:
