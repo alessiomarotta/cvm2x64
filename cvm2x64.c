@@ -42,7 +42,7 @@ void print_stack(int64_t *sp, int n) {
 		printf("[%d] %d\n", i-3, sp[*sp-i]);
 }
 
-int nextInt(FILE *fp) {
+int next_int(FILE *fp) {
 	int n;
 	int i = 0;
 	bool is_comment = false;
@@ -73,12 +73,12 @@ int nextInt(FILE *fp) {
 
 int *parse_cvm(char *fname, int *line_count) {
 	FILE *fp = fopen(fname, "r");
-	*line_count = nextInt(fp);
+	*line_count = next_int(fp);
 	int *buffer = calloc(*line_count + 3, sizeof(int));
 	int i = 0;
 
 	while (i < *line_count)
-		buffer[i++] = nextInt(fp);
+		buffer[i++] = next_int(fp);
 
 	fclose(fp);
 
